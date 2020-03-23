@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
+import withTodoService from "./helper-components/withTodoService.js";
 import { useHistory, useLocation } from "react-router-dom";
 
 const Login = props => {
@@ -8,7 +9,7 @@ const Login = props => {
 
   let { from } = location.state || { from: { pathname: "/" } };
   let login = () => {
-    props.fakeAuth.authenticate(() => {
+    props.todoService.authenticate(() => {
       history.replace(from);
     });
   };
@@ -36,4 +37,4 @@ const Login = props => {
   );
 };
 
-export default Login;
+export default withTodoService()(Login);

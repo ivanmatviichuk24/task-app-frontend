@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Form, Button, FormControl } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import withTodoService from "./helper-components/withTodoService.js";
 
 const Header = props => {
   return (
@@ -30,4 +31,4 @@ const Header = props => {
   );
 };
 
-export default Header;
+export default withTodoService()(Header);

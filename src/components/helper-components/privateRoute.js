@@ -1,13 +1,14 @@
 import React from "react";
-import fakeAuth from "../../fakeAuth.js";
+import withTodoService from "./withTodoService.js";
 import { Route, Redirect } from "react-router-dom";
 
 function PrivateRoute({ children, ...rest }) {
+  console.log(rest);
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        fakeAuth.isAuthenticated ? (
+        rest.todoService.isAuthenticated ? (
           children
         ) : (
           <Redirect
@@ -22,4 +23,4 @@ function PrivateRoute({ children, ...rest }) {
   );
 }
 
-export default PrivateRoute;
+export default withTodoService()(PrivateRoute);

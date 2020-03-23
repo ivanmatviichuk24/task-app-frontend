@@ -1,9 +1,11 @@
 import React from "react";
 import PrivateRoute from "./components/helper-components/privateRoute.js";
-import fakeAuth from "./fakeAuth.js";
+import TodoService from "./services/todoServiceMock.js";
 import Header from "./components/Header.js";
 import Login from "./components/Login.js";
 import TaskList from "./components/TaskList/TaskList.js";
+
+import { Provider as TodoServiceProvider } from "./components/helper-components/TodoContext.js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -13,32 +15,35 @@ import {
   useHistory
 } from "react-router-dom";
 
+const todoService = new TodoService();
+
 export default function AuthExample() {
   return (
-    <Router>
-      <div>
-        <AuthButton />
-        <Header />
-        <Switch>
-          <PrivateRoute path="/" exact>
-            <TaskList />
-          </PrivateRoute>
-          <Route path="/public">
-            <PublicPage />
-          </Route>
-          <Route path="/login">
-            <Login fakeAuth={fakeAuth} />
-          </Route>
-          <PrivateRoute path="/protected">
-            <ProtectedPage />
-          </PrivateRoute>
-        </Switch>
-      </div>
-    </Router>
+    <TodoServiceProvider value={todoService}>
+      <Router>
+        <div>
+          <Header />
+          <Switch>
+            <PrivateRoute path="/" exact>
+              <TaskList />
+            </PrivateRoute>
+            <Route path="/public">
+              <PublicPage />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <PrivateRoute path="/protected">
+              <ProtectedPage />
+            </PrivateRoute>
+          </Switch>
+        </div>
+      </Router>
+    </TodoServiceProvider>
   );
 }
 
-function AuthButton() {
+/*function AuthButton() {
   let history = useHistory();
 
   return fakeAuth.isAuthenticated ? (
@@ -56,7 +61,7 @@ function AuthButton() {
     <p>You are not logged in.</p>
   );
 }
-
+*/
 function PublicPage() {
   return <h3>Public</h3>;
 }
