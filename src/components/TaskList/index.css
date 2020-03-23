@@ -2,11 +2,18 @@
   padding: 5px;
 }
 
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
 .submit-icon {
   color: green;
 }
 
 .edit-icon {
+  display: flex;
   color: yellow;
 }
 

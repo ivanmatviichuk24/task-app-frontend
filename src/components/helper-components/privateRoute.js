@@ -1,14 +1,14 @@
 import React from "react";
 import withTodoService from "./withTodoService.js";
 import { Route, Redirect } from "react-router-dom";
-
+import { connect } from "react-redux";
 function PrivateRoute({ children, ...rest }) {
   console.log(rest);
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        rest.todoService.isAuthenticated ? (
+        rest.user.isAuthenticated ? (
           children
         ) : (
           <Redirect
@@ -23,4 +23,10 @@ function PrivateRoute({ children, ...rest }) {
   );
 }
 
-export default withTodoService()(PrivateRoute);
+const mapStateToProps = ({ user }) => {
+  return {
+    user
+  };
+};
+
+export default withTodoService()(connect(mapStateToProps)(PrivateRoute));
