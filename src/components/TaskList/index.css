@@ -1,0 +1,15 @@
+.icon {
+  padding: 5px;
+}
+
+.submit-icon {
+  color: green;
+}
+
+.edit-icon {
+  color: yellow;
+}
+
+.delete-icon {
+  color: red;
+}
