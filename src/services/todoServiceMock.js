@@ -1,4 +1,4 @@
-const tasks = [
+let tasks = [
   {
     id: 1,
     title: "create task app",
@@ -36,9 +36,13 @@ const users = [
 
 class TodoService {
   async authenticate(email, password) {
-    return users.filter(
+    const user = users.filter(
       user => user.email === email && user.password === password
     )[0];
+    if (!user) {
+      throw new Error("Error");
+    }
+    return user;
   }
 
   async signout(cb) {
@@ -47,6 +51,10 @@ class TodoService {
   }
 
   async loadTasks() {
+    return tasks;
+  }
+  async addTask(task) {
+    tasks = [task, ...tasks];
     return tasks;
   }
 }

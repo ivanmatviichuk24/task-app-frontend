@@ -1,21 +1,19 @@
 import React from "react";
-import AddTask from "../AddTask/AddTask.js";
+import AddTask from "../TaskForm/TaskForm.js";
 import { Table } from "react-bootstrap";
 import withTodoService from "../helper-components/withTodoService";
-
+import { connect } from "react-redux";
+import {
+  fetchTaskList,
+  fetchTaskListError
+} from "../../redux/actions/taskList.js";
 import "./index.css";
 
 class Tasks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { tasks: [] };
-  }
   async componentDidMount() {
     const tasks = await this.props.todoService.loadTasks();
-    console.log(this.props.todoService.loadTasks);
-    await this.setState({
-      tasks: tasks
-    });
+
+    this.props.fetchTaskList(tasks);
   }
   render() {
     return (
@@ -30,10 +28,10 @@ class Tasks extends React.Component {
         </thead>
         <tbody>
           <AddTask />
-          {this.state.tasks.map(elem => {
+          {this.props.taskList.list.map((elem, idx) => {
             return (
-              <tr key={elem.id}>
-                <td>{elem.id}</td>
+              <tr key={idx + 1}>
+                <td>{idx + 1}</td>
                 <td>{elem.title}</td>
                 <td>{elem.description}</td>
                 <td className="actions">
@@ -50,4 +48,18 @@ class Tasks extends React.Component {
   }
 }
 
-export default withTodoService()(Tasks);
+const mapStateToProps = ({ taskList }) => {
+  return {
+    taskList
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTaskList: list => dispatch(fetchTaskList(list))
+  };
+};
+
+export default withTodoService()(
+  connect(mapStateToProps, mapDispatchToProps)(Tasks)
+);
