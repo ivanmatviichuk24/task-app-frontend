@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import withTodoService from "../helper-components/withTodoService.js";
 import { useHistory, useLocation } from "react-router-dom";
@@ -10,24 +10,22 @@ import {
 } from "../../redux/actions/loginForm.js";
 import { fetchUser, fetchUserError } from "../../redux/actions/user.js";
 
-import "./index.css";
 const Login = props => {
   let history = useHistory();
   let location = useLocation();
 
   let { from } = location.state || { from: { pathname: "/tasks" } };
-  let login = async () => {
+  let register = async () => {
     try {
-      const res = await props.todoService.signIn(
-        props.loginForm.email,
-        props.loginForm.password
-      );
-      if (!res.ok) {
-        throw new Error("error");
-      }
+      const res = await props.todoService.createUser({
+        email: props.loginForm.email,
+        password: props.loginForm.password
+      });
       const body = await res.json();
-      props.fetchUser(body.user);
+      console.log(body);
       localStorage.setItem("userToken", body.token);
+      console.log(localStorage.getItem("userToken"));
+      props.fetchUser(res.user);
 
       history.replace(from);
     } catch (e) {
@@ -40,25 +38,6 @@ const Login = props => {
   ) : (
     ""
   );
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const res = await props.todoService.getProfile();
-        if (!res.ok) {
-          throw new Error("error");
-        }
-        const body = await res.json();
-        props.fetchUser(body.user);
-
-        history.replace(from);
-      } catch (e) {
-        props.fetchUserError();
-      }
-    };
-    if (localStorage.getItem("userToken")) {
-      loadUser();
-    }
-  }, []);
 
   return (
     <div className="login-form">
@@ -89,7 +68,7 @@ const Login = props => {
         <Form.Group controlId="formBasicCheckbox">
           <Form.Check type="checkbox" label="Check me out" />
         </Form.Group>
-        <Button variant="primary" onClick={login}>
+        <Button variant="primary" onClick={register}>
           Submit
         </Button>
       </Form>

@@ -13,6 +13,14 @@ import { Link } from "react-router-dom";
 import { fetchTaskList } from "../../redux/actions/taskList";
 
 class EditTask extends React.Component {
+  async componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      const _id = this.props.match.params.id;
+      const task = await this.props.todoService.loadTask(_id);
+      this.props.titleChange(task.title);
+      this.props.descriptionChange(task.description);
+    }
+  }
   async componentDidMount() {
     const _id = this.props.match.params.id;
     const task = await this.props.todoService.loadTask(_id);
@@ -21,7 +29,6 @@ class EditTask extends React.Component {
   }
   render() {
     const { props } = this;
-    console.log(props);
     return (
       <div className="add-task-form-container">
         <Form className="add-task-form">
@@ -55,13 +62,23 @@ class EditTask extends React.Component {
                   description: props.taskForm.description
                 });
                 console.log(updated);
-                props.submit();
+                props.clearForm();
                 const tasks = await props.todoService.loadTasks();
                 props.fetchTaskList(tasks);
               }}
             >
               <i className="fas fa-plus icon" />
               Edit
+            </Button>
+            <Button
+              className="add-task-form-elem"
+              variant="primary"
+              onClick={() => {
+                this.props.clearForm();
+              }}
+            >
+              <i className="fas fa-plus icon" />
+              Cancel
             </Button>
           </Link>
         </Form>
@@ -79,8 +96,8 @@ const mapDispatchToProps = dispatch => {
   return {
     titleChange: value => dispatch(taskFormTitleChange(value)),
     descriptionChange: value => dispatch(taskFormDescriptionChange(value)),
-    submit: () => taskFormSubmit(dispatch),
-    fetchTaskList: list => dispatch(fetchTaskList(list))
+    clearForm: () => taskFormSubmit(dispatch),
+    fetchTaskList: list => fetchTaskList(dispatch, list)
   };
 };
 

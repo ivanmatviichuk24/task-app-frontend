@@ -1,6 +1,6 @@
 import React from "react";
 import PrivateRoute from "./components/helper-components/privateRoute.js";
-import TodoService from "./services/todoServiceMock.js";
+import TodoService from "./services/todoService.js";
 import Header from "./components/Header/Header.js";
 import Login from "./components/Login/Login.js";
 
@@ -9,6 +9,7 @@ import EditTaskPage from "./components/Pages/EditTaskPage.js";
 import TaskList from "./components/TaskList/TaskList.js";
 import TaskForm from "./components/TaskForm/TaskForm.js";
 import EditTask from "./components/EditTask/EditTask.js";
+import Register from "./components/Register/Register.js";
 import { Provider as TodoServiceProvider } from "./components/helper-components/TodoContext.js";
 import { Provider as StoreProvider } from "react-redux";
 import store from "./redux/index.js";
@@ -36,6 +37,7 @@ export default function AuthExample() {
 
               <Route path="/public/" component={PublicPage} />
               <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
               <PrivateRoute path="/protected" component={ProtectedPage} />
             </Switch>
           </div>

@@ -39,7 +39,7 @@ const users = [
 ];
 
 class TodoService {
-  async authenticate(email, password) {
+  async signIn(email, password) {
     const user = users.filter(
       user => user.email === email && user.password === password
     )[0];
@@ -58,7 +58,12 @@ class TodoService {
     return tasks;
   }
   async addTask(task) {
-    tasks = [task, ...tasks];
+    const newTask = {
+      _id: Math.floor(Math.random() * (150 - 50) + 50),
+      completed: false,
+      ...task
+    };
+    tasks = [newTask, ...tasks];
     return tasks;
   }
 

@@ -5,25 +5,50 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   fetchTaskList,
-  fetchTaskListError
+  fetchTaskListError,
+  taskListShowAll,
+  taskListShowCompleted,
+  taskListShowWorking,
+  taskListFilter
 } from "../../redux/actions/taskList.js";
 import "./index.css";
 
+import TaskFilter from "../helper-components/taskFilter.js";
+
 class Tasks extends React.Component {
   async componentDidMount() {
-    const tasks = await this.props.todoService.loadTasks();
-
-    this.props.fetchTaskList(tasks);
+    const res = await this.props.todoService.loadTasks();
+    const body = await res.json();
+    this.props.fetchTaskList(body);
+    this.props.filter();
   }
 
   render() {
     return (
       <>
-        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-          <Tab eventKey="home" title="Home" />
-          <Tab eventKey="profile" title="Profile" />
-          <Tab eventKey="contact" title="Contact" />
-        </Tabs>
+        <div className="btn-group">
+          <button
+            key="all"
+            type="button"
+            onClick={() => this.props.filterAll()}
+          >
+            all
+          </button>
+          <button
+            key="button"
+            type="button"
+            onClick={() => this.props.filterCompleted()}
+          >
+            completed
+          </button>
+          <button
+            key="active"
+            type="button"
+            onClick={() => this.props.filterWorking()}
+          >
+            active
+          </button>
+        </div>
         <Table striped bordered hover variant="dark" responsive>
           <thead>
             <tr>
@@ -34,7 +59,7 @@ class Tasks extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.taskList.list.map((elem, idx) => {
+            {this.props.taskList.filteredList.map((elem, idx) => {
               const completed = !elem.completed ? (
                 <i className="fas fa-check submit-icon icon" />
               ) : (
@@ -70,10 +95,29 @@ const mapStateToProps = ({ taskList }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTaskList: list => dispatch(fetchTaskList(list))
+    fetchTaskList: list => dispatch(fetchTaskList(list)),
+    filter: taskList => dispatch(taskListFilter(taskList)),
+    filterAll: taskList => taskListShowAll(dispatch, taskList),
+    filterCompleted: taskList => taskListShowCompleted(dispatch, taskList),
+    filterWorking: taskList => taskListShowWorking(dispatch, taskList)
+  };
+};
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const { taskList } = stateProps;
+  const { dispatch } = dispatchProps;
+
+  return {
+    ...ownProps,
+    ...stateProps,
+    fetchTaskList: list => fetchTaskList(dispatch, list, taskList.filter),
+    filter: () => dispatch(taskListFilter(taskList)),
+    filterAll: () => taskListShowAll(dispatch, taskList),
+    filterCompleted: () => taskListShowCompleted(dispatch, taskList),
+    filterWorking: () => taskListShowWorking(dispatch, taskList)
   };
 };
 
 export default withTodoService()(
-  connect(mapStateToProps, mapDispatchToProps)(Tasks)
+  connect(mapStateToProps, null, mergeProps)(Tasks)
 );

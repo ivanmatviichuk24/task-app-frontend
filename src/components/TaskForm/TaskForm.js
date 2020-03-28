@@ -42,8 +42,6 @@ const TaskForm = props => {
               description: props.taskForm.description
             });
             props.submit();
-            const tasks = await props.todoService.loadTasks();
-            props.fetchTaskList(tasks);
           }}
         >
           <i className="fas fa-plus icon" />
@@ -64,8 +62,7 @@ const mapDispatchToProps = dispatch => {
   return {
     titleChange: value => dispatch(taskFormTitleChange(value)),
     descriptionChange: value => dispatch(taskFormDescriptionChange(value)),
-    submit: () => taskFormSubmit(dispatch),
-    fetchTaskList: list => dispatch(fetchTaskList(list))
+    submit: () => taskFormSubmit(dispatch)
   };
 };
 
