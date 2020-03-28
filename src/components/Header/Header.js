@@ -24,7 +24,7 @@ const Header = props => {
   );
   return (
     <Navbar bg="dark" variant="dark" className="header">
-      <Navbar.Brand as={Link} to="/">
+      <Navbar.Brand as={Link} to="/tasks">
         TaskApp
       </Navbar.Brand>
       <Nav className="mr-auto">

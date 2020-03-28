@@ -2,19 +2,28 @@ import React from "react";
 import withTodoService from "./withTodoService.js";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-function PrivateRoute({ children, ...rest }) {
-  console.log(rest);
+
+/*const PrivateRoute = ({ component: Component, ...rest }) => {
+  const isAuthenticated = stores.auth.isAuthenticated;
+  if (isAuthenticated) {
+    return <Route {...rest} render={props => } />;
+  }
+
+  return <Route {...rest} render={props => <Redirect to="/Login" />} />;
+};*/
+
+function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
       {...rest}
-      render={({ location }) =>
+      render={props =>
         rest.user.isAuthenticated ? (
-          children
+          <Component {...props} />
         ) : (
           <Redirect
             to={{
               pathname: "/login",
-              state: { from: location }
+              state: { from: props.location }
             }}
           />
         )

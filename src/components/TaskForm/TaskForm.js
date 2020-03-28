@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { Form, Col } from "react-bootstrap";
+import { Form, Col, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import withTodoService from "../helper-components/withTodoService.js";
 import {
@@ -12,25 +12,30 @@ import {
 import { fetchTaskList } from "../../redux/actions/taskList";
 const TaskForm = props => {
   return (
-    <tr>
-      <td></td>
-      <td>
-        <Form.Control
-          value={props.taskForm.title}
-          onChange={e => props.titleChange(e.target.value)}
-        />
-      </td>
-      <td>
-        <Form.Control
-          value={props.taskForm.description}
-          onChange={e => {
-            props.descriptionChange(e.target.value);
-          }}
-        />
-      </td>
-      <td className="actions">
-        <i
-          className="fas fa-plus icon"
+    <div className="add-task-form-container">
+      <Form className="add-task-form">
+        <Form.Group className="add-task-form-elem">
+          <Form.Label>Title</Form.Label>
+          <Form.Control
+            placeholder="title"
+            value={props.taskForm.title}
+            onChange={e => props.titleChange(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className="add-task-form-elem">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            placeholder="Description"
+            value={props.taskForm.description}
+            onChange={e => {
+              props.descriptionChange(e.target.value);
+            }}
+          />
+        </Form.Group>
+        <Button
+          className="add-task-form-elem"
+          variant="primary"
           onClick={async () => {
             await props.todoService.addTask({
               title: props.taskForm.title,
@@ -40,9 +45,12 @@ const TaskForm = props => {
             const tasks = await props.todoService.loadTasks();
             props.fetchTaskList(tasks);
           }}
-        />
-      </td>
-    </tr>
+        >
+          <i className="fas fa-plus icon" />
+          Add
+        </Button>
+      </Form>
+    </div>
   );
 };
 

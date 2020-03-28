@@ -1,19 +1,21 @@
 import React from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import withTodoService from "./helper-components/withTodoService.js";
+import withTodoService from "../helper-components/withTodoService.js";
 import { useHistory, useLocation } from "react-router-dom";
 
 import { connect } from "react-redux";
 import {
   loginFormEmailChange,
   loginFormPasswordChange
-} from "../redux/actions/loginForm.js";
-import { fetchUser, fetchUserError } from "../redux/actions/user.js";
+} from "../../redux/actions/loginForm.js";
+import { fetchUser, fetchUserError } from "../../redux/actions/user.js";
+
+import "./index.css";
 const Login = props => {
   let history = useHistory();
   let location = useLocation();
 
-  let { from } = location.state || { from: { pathname: "/" } };
+  let { from } = location.state || { from: { pathname: "/tasks" } };
   let login = async () => {
     try {
       const user = await props.todoService.authenticate(
@@ -34,7 +36,7 @@ const Login = props => {
   );
 
   return (
-    <>
+    <div className="login-form">
       {errorMessage}
       <Form>
         <Form.Group controlId="formBasicEmail">
@@ -66,7 +68,7 @@ const Login = props => {
           Submit
         </Button>
       </Form>
-    </>
+    </div>
   );
 };
 

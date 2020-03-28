@@ -2,14 +2,19 @@ import React from "react";
 import PrivateRoute from "./components/helper-components/privateRoute.js";
 import TodoService from "./services/todoServiceMock.js";
 import Header from "./components/Header/Header.js";
-import Login from "./components/Login.js";
-import TaskList from "./components/TaskList/TaskList.js";
+import Login from "./components/Login/Login.js";
 
+import HomePage from "./components/Pages/HomePage.js";
+import EditTaskPage from "./components/Pages/EditTaskPage.js";
+import TaskList from "./components/TaskList/TaskList.js";
+import TaskForm from "./components/TaskForm/TaskForm.js";
+import EditTask from "./components/EditTask/EditTask.js";
 import { Provider as TodoServiceProvider } from "./components/helper-components/TodoContext.js";
 import { Provider as StoreProvider } from "react-redux";
 import store from "./redux/index.js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
 import {
   BrowserRouter as Router,
   Switch,
@@ -24,23 +29,14 @@ export default function AuthExample() {
     <TodoServiceProvider value={todoService}>
       <StoreProvider store={store}>
         <Router>
-          <div>
-            <Header />
+          <Header />
+          <div className="main">
             <Switch>
-              <PrivateRoute path="/" exact>
-                <div>
-                  <TaskList />
-                </div>
-              </PrivateRoute>
-              <Route path="/public">
-                <PublicPage />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <PrivateRoute path="/protected">
-                <ProtectedPage />
-              </PrivateRoute>
+              <PrivateRoute path="/tasks" component={Tasks} />
+
+              <Route path="/public/" component={PublicPage} />
+              <Route path="/login" component={Login} />
+              <PrivateRoute path="/protected" component={ProtectedPage} />
             </Switch>
           </div>
         </Router>
@@ -49,29 +45,28 @@ export default function AuthExample() {
   );
 }
 
-/*function AuthButton() {
-  let history = useHistory();
-
-  return fakeAuth.isAuthenticated ? (
-    <p>
-      Welcome!{" "}
-      <button
-        onClick={() => {
-          fakeAuth.signout(() => history.push("/login"));
-        }}
-      >
-        Sign out
-      </button>
-    </p>
-  ) : (
-    <p>You are not logged in.</p>
+const Tasks = () => {
+  return (
+    <>
+      <Switch>
+        <PrivateRoute path="/tasks" exact component={TaskForm} />
+        <PrivateRoute path="/tasks/edit/:id" exact component={EditTask} />
+      </Switch>
+      <TaskList />
+    </>
   );
-}
-*/
-function PublicPage() {
-  return <h3>Public</h3>;
+};
+
+class PublicPage extends React.Component {
+  render() {
+    console.log(this.props);
+    return <h3>Public</h3>;
+  }
 }
 
-function ProtectedPage() {
-  return <h3>Protected</h3>;
+class ProtectedPage extends React.Component {
+  render() {
+    console.log(this.props);
+    return <h3>Protected</h3>;
+  }
 }

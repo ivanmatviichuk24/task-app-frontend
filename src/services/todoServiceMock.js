@@ -1,23 +1,27 @@
 let tasks = [
   {
-    id: 1,
+    _id: 1,
     title: "create task app",
-    description: "nerdysoft test app"
+    description: "nerdysoft test app",
+    completed: false
   },
   {
-    id: 2,
+    _id: 2,
     title: "task 2",
-    description: "description 2"
+    description: "description 2",
+    completed: false
   },
   {
-    id: 3,
+    _id: 3,
     title: "task 3",
-    description: "description 3"
+    description: "description 3",
+    completed: true
   },
   {
-    id: 4,
+    _id: 4,
     title: "task 4",
-    description: "description 4"
+    description: "description 4",
+    completed: true
   }
 ];
 
@@ -56,6 +60,17 @@ class TodoService {
   async addTask(task) {
     tasks = [task, ...tasks];
     return tasks;
+  }
+
+  async loadTask(_id) {
+    return tasks.find(e => e._id === parseInt(_id));
+  }
+
+  async updateTask(task) {
+    const idx = tasks.findIndex(e => e._id === parseInt(task._id));
+    console.log(idx);
+    tasks[idx] = { ...tasks[idx], ...task };
+    return tasks[idx];
   }
 }
 

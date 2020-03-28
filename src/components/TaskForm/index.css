@@ -7,3 +7,17 @@
 .icon {
   padding: 5px;
 }
+
+.add-task-form-container {
+  padding: 12px;
+  border: 2px solid white;
+  border-radius: 8px;
+}
+
+.add-task-form {
+  display: flex;
+
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
