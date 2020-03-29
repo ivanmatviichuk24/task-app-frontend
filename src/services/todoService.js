@@ -2,7 +2,7 @@ import openSocket from "socket.io-client";
 
 class TodoService {
   baseURL = "http://localhost:5000";
-
+  socket = openSocket("http://localhost:5000");
   async signIn(email, password) {
     return await fetch(`${this.baseURL}/users/login`, {
       method: "POST",
@@ -22,6 +22,17 @@ class TodoService {
       body: JSON.stringify(user),
       headers: {
         "Content-Type": "application/json"
+      }
+    });
+  }
+
+  async share(sharedTask) {
+    return await fetch(`${this.baseURL}/tasks/share`, {
+      method: "POST",
+      body: JSON.stringify(sharedTask),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await this.getToken()}`
       }
     });
   }

@@ -48,15 +48,15 @@ const Login = props => {
           throw new Error("error");
         }
         const body = await res.json();
-        props.fetchUser(body.user);
-
+        props.fetchUser(body);
+        props.todoService.socket.emit("login", body.email);
         history.replace(from);
       } catch (e) {
         props.fetchUserError();
       }
     };
     if (localStorage.getItem("userToken")) {
-      loadUser();
+      const body = loadUser();
     }
   }, []);
 

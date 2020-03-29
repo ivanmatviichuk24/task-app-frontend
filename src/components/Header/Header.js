@@ -7,14 +7,17 @@ import { userLogout } from "../../redux/actions/user.js";
 import "./index.css";
 
 const Header = props => {
-  const logout = () => {
-    localStorage.setItem("userToken", "");
-    props.logout();
-  };
   const user = props.user.isAuthenticated ? (
     <div>
       {props.user.name}
-      <i className="fas fa-sign-out-alt" onClick={logout}></i>
+      <i
+        className="fas fa-sign-out-alt"
+        onClick={() => {
+          props.logout();
+          localStorage.setItem("userToken", "");
+          props.todoService.socket.disconnect();
+        }}
+      ></i>
     </div>
   ) : (
     <Nav>

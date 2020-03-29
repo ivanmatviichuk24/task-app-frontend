@@ -1,9 +1,8 @@
 import React from "react";
-import { Table, Tabs, Tab } from "react-bootstrap";
+import { Table, Tabs, Tab, OverlayTrigger, Overlay } from "react-bootstrap";
 import withTodoService from "../helper-components/withTodoService";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import openSocket from "socket.io-client";
 import {
   fetchTaskList,
   fetchTaskListError,
@@ -15,9 +14,16 @@ import {
 import "./index.css";
 
 import TaskFilter from "../helper-components/taskFilter.js";
-
+import Modal from "../helper-components/Popover.js";
 class Tasks extends React.Component {
+  constructor() {
+    super();
+  }
   async componentDidMount() {
+    console.log(this.props.todoService.socket);
+    this.props.todoService.socket.on("tasks", list => {
+      this.props.fetchTaskList(list);
+    });
     const res = await this.props.todoService.loadTasks();
     const body = await res.json();
     console.log(body);
@@ -63,6 +69,7 @@ class Tasks extends React.Component {
               <th>#</th>
               <th>Title</th>
               <th>Description</th>
+              <th>Shared By</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -86,6 +93,7 @@ class Tasks extends React.Component {
                   <td>{idx + 1}</td>
                   <td>{elem.title}</td>
                   <td>{elem.description}</td>
+                  <td>{elem.sharedBy || ""}</td>
                   <td className="actions">
                     {completed}
                     <i
@@ -97,6 +105,7 @@ class Tasks extends React.Component {
                     <Link to={`/tasks/edit/${elem._id}`}>
                       <i className="fas fa-edit edit-icon icon" />
                     </Link>
+                    <Modal task={elem} />
                   </td>
                 </tr>
               );
@@ -108,9 +117,10 @@ class Tasks extends React.Component {
   }
 }
 
-const mapStateToProps = ({ taskList }) => {
+const mapStateToProps = ({ taskList, user }) => {
   return {
-    taskList
+    taskList,
+    user
   };
 };
 
