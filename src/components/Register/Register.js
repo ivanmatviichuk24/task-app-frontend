@@ -43,6 +43,22 @@ const Login = props => {
     <div className="login-form">
       {errorMessage}
       <Form>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            placeholder="name"
+            /*  defaultValue={props.loginForm.password}
+            onChange={e => props.passwordChange(e.target.value)}*/
+          />
+        </Form.Group>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Age</Form.Label>
+          <Form.Control
+            placeholder="age"
+            /*  defaultValue={props.loginForm.password}
+            onChange={e => props.passwordChange(e.target.value)}*/
+          />
+        </Form.Group>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control
@@ -65,9 +81,7 @@ const Login = props => {
             onChange={e => props.passwordChange(e.target.value)}
           />
         </Form.Group>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
+
         <Button variant="primary" onClick={register}>
           Submit
         </Button>

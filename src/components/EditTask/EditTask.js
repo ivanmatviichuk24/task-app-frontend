@@ -16,16 +16,18 @@ class EditTask extends React.Component {
   async componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       const _id = this.props.match.params.id;
-      const task = await this.props.todoService.loadTask(_id);
-      this.props.titleChange(task.title);
-      this.props.descriptionChange(task.description);
+      const res = await this.props.todoService.loadTask(_id);
+      const body = await res.json();
+      this.props.titleChange(body.title);
+      this.props.descriptionChange(body.description);
     }
   }
   async componentDidMount() {
     const _id = this.props.match.params.id;
-    const task = await this.props.todoService.loadTask(_id);
-    this.props.titleChange(task.title);
-    this.props.descriptionChange(task.description);
+    const res = await this.props.todoService.loadTask(_id);
+    const body = await res.json();
+    this.props.titleChange(body.title);
+    this.props.descriptionChange(body.description);
   }
   render() {
     const { props } = this;
@@ -56,15 +58,14 @@ class EditTask extends React.Component {
               className="add-task-form-elem"
               variant="primary"
               onClick={async () => {
-                const updated = await this.props.todoService.updateTask({
-                  _id: this.props.match.params.id,
-                  title: props.taskForm.title,
-                  description: props.taskForm.description
-                });
-                console.log(updated);
+                await this.props.todoService.updateTask(
+                  {
+                    title: props.taskForm.title,
+                    description: props.taskForm.description
+                  },
+                  this.props.match.params.id
+                );
                 props.clearForm();
-                const tasks = await props.todoService.loadTasks();
-                props.fetchTaskList(tasks);
               }}
             >
               <i className="fas fa-plus icon" />

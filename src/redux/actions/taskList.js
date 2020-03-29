@@ -1,9 +1,8 @@
-const fetchTaskList = (dispatch, list, filter) => {
+const fetchTaskList = (dispatch, list) => {
   dispatch({
     type: "FETCH_TASK_LIST",
     payload: list
   });
-  dispatch(taskListFilter({ list, filter }));
 };
 
 const fetchTaskListError = {
@@ -36,7 +35,6 @@ const taskListFilter = (taskList, filter) => {
         return elem.completed === false;
     }
   });
-  console.log(filteredList);
   return {
     type: "TASK_LIST_FILTER",
     payload: filteredList

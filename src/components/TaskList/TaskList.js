@@ -3,6 +3,7 @@ import { Table, Tabs, Tab } from "react-bootstrap";
 import withTodoService from "../helper-components/withTodoService";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import openSocket from "socket.io-client";
 import {
   fetchTaskList,
   fetchTaskListError,
@@ -19,8 +20,15 @@ class Tasks extends React.Component {
   async componentDidMount() {
     const res = await this.props.todoService.loadTasks();
     const body = await res.json();
+    console.log(body);
     this.props.fetchTaskList(body);
-    this.props.filter();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.taskList.list !== prevProps.taskList.list) {
+      console.log(this.props.taskList);
+      this.props.filter(this.props.taskList);
+    }
   }
 
   render() {
@@ -61,7 +69,15 @@ class Tasks extends React.Component {
           <tbody>
             {this.props.taskList.filteredList.map((elem, idx) => {
               const completed = !elem.completed ? (
-                <i className="fas fa-check submit-icon icon" />
+                <i
+                  className="fas fa-check submit-icon icon"
+                  onClick={() =>
+                    this.props.todoService.updateTask(
+                      { completed: true },
+                      elem._id
+                    )
+                  }
+                />
               ) : (
                 ""
               );
@@ -72,7 +88,12 @@ class Tasks extends React.Component {
                   <td>{elem.description}</td>
                   <td className="actions">
                     {completed}
-                    <i className="fas fa-trash delete-icon icon" />
+                    <i
+                      className="fas fa-trash delete-icon icon"
+                      onClick={() =>
+                        this.props.todoService.deleteTask(elem._id)
+                      }
+                    />
                     <Link to={`/tasks/edit/${elem._id}`}>
                       <i className="fas fa-edit edit-icon icon" />
                     </Link>
@@ -110,7 +131,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     ...ownProps,
     ...stateProps,
-    fetchTaskList: list => fetchTaskList(dispatch, list, taskList.filter),
+    fetchTaskList: list => fetchTaskList(dispatch, list),
     filter: () => dispatch(taskListFilter(taskList)),
     filterAll: () => taskListShowAll(dispatch, taskList),
     filterCompleted: () => taskListShowCompleted(dispatch, taskList),
