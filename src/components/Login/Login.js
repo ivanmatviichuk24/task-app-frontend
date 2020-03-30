@@ -50,6 +50,10 @@ const Login = props => {
         const body = await res.json();
         props.fetchUser(body);
         props.todoService.socket.emit("login", body.email);
+        props.todoService.socket.on("reconnect", () => {
+          console.log("connect");
+          props.todoService.socket.emit("login", body.email);
+        });
         history.replace(from);
       } catch (e) {
         props.fetchUserError();

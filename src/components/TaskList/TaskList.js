@@ -24,10 +24,6 @@ class Tasks extends React.Component {
     this.props.todoService.socket.on("tasks", list => {
       this.props.fetchTaskList(list);
     });
-    const res = await this.props.todoService.loadTasks();
-    const body = await res.json();
-    console.log(body);
-    this.props.fetchTaskList(body);
   }
 
   componentDidUpdate(prevProps) {

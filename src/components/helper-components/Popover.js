@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { Popover, Form, Button, Modal } from "react-bootstrap";
+import { Popover, Form, Button, Modal, Alert } from "react-bootstrap";
 import withTodoService from "./withTodoService";
 const Example = props => {
   const [show, setShow] = useState(false);
+  const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setError(false);
+  };
   const handleShow = () => setShow(true);
-
+  const errorMessage = error ? <Alert variant="danger">Error</Alert> : "";
   return (
     <>
       <i className="fas fa-share-square icon" onClick={handleShow} />
@@ -16,6 +20,7 @@ const Example = props => {
           <Modal.Title>Share</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {errorMessage}
           <Form.Control
             placeholder="Description"
             value={email}
@@ -28,16 +33,21 @@ const Example = props => {
           </Button>
           <Button
             variant="primary"
-            onClick={() => {
-              console.log(email);
-              props.todoService.share({
+            onClick={async () => {
+              const res = await props.todoService.share({
                 task: {
                   title: props.task.title,
                   description: props.task.description
                 },
                 email: email
               });
-              handleClose();
+              if (res.ok) {
+                setEmail("");
+                setError(false);
+                handleClose();
+              } else {
+                setError(true);
+              }
             }}
           >
             Ok
