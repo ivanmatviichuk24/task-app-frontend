@@ -1,0 +1,55 @@
+import React from "react";
+import { Navbar, Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import withTodoService from "../helper-components/withTodoService.js";
+import { connect } from "react-redux";
+import { userLogout } from "../../redux/actions/user.js";
+
+const Header = props => {
+  const user = props.user.isAuthenticated ? (
+    <div>
+      {props.user.name}
+      <i
+        className="fas fa-sign-out-alt"
+        onClick={() => {
+          props.logout();
+          localStorage.setItem("userToken", "");
+          props.todoService.disconnectSocket();
+        }}
+      ></i>
+    </div>
+  ) : (
+    <Nav>
+      <Nav.Link as={Link} to={"/Register"}>
+        Register
+      </Nav.Link>
+      <Nav.Link as={Link} to={"/Login"}>
+        Login
+      </Nav.Link>
+    </Nav>
+  );
+  return (
+    <Navbar bg="dark" variant="dark">
+      <Navbar.Brand as={Link} to="/tasks">
+        TaskApp
+      </Navbar.Brand>
+      <Nav className="mr-auto"></Nav>
+      {user}
+    </Navbar>
+  );
+};
+const mapStateToProps = ({ user }) => {
+  return {
+    user
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(userLogout)
+  };
+};
+
+export default withTodoService()(
+  connect(mapStateToProps, mapDispatchToProps)(Header)
+);

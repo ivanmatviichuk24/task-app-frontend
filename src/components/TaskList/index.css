@@ -1,0 +1,39 @@
+.icon {
+  padding: 5px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.submit-icon {
+  color: green;
+}
+
+.edit-icon {
+  display: flex;
+  color: yellow;
+}
+
+.delete-icon {
+  color: red;
+}
+
+.task-filter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.task-filter button {
+  background-color: #677067; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  margin: 1vh 0;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
