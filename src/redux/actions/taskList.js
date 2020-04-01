@@ -3,6 +3,7 @@ const fetchTaskList = (dispatch, list) => {
     type: "FETCH_TASK_LIST",
     payload: list
   });
+  return;
 };
 
 const fetchTaskListError = {

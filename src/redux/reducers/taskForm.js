@@ -1,6 +1,7 @@
 const initialState = {
   title: "",
-  description: ""
+  description: "",
+  error: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -14,6 +15,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         description: action.payload
+      };
+    case "TASK_FORM_ERROR":
+      return {
+        ...state,
+        error: action.payload
       };
     default:
       return state;

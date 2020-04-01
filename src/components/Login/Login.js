@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import withTodoService from "../helper-components/withTodoService.js";
 import { useHistory, useLocation } from "react-router-dom";
@@ -22,13 +22,9 @@ const Login = props => {
         props.loginForm.email,
         props.loginForm.password
       );
-      if (!res.ok) {
-        throw new Error("error");
-      }
-      const body = await res.json();
-      props.fetchUser(body.user);
-      localStorage.setItem("userToken", body.token);
-
+      props.fetchUser(res.user);
+      await localStorage.setItem("userToken", res.token);
+      props.todoService.connectSocket(res.user.email);
       history.replace(from);
     } catch (e) {
       props.fetchUserError();
@@ -40,29 +36,6 @@ const Login = props => {
   ) : (
     ""
   );
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const res = await props.todoService.getProfile();
-        if (!res.ok) {
-          throw new Error("error");
-        }
-        const body = await res.json();
-        props.fetchUser(body);
-        props.todoService.socket.emit("login", body.email);
-        props.todoService.socket.on("reconnect", () => {
-          console.log("connect");
-          props.todoService.socket.emit("login", body.email);
-        });
-        history.replace(from);
-      } catch (e) {
-        props.fetchUserError();
-      }
-    };
-    if (localStorage.getItem("userToken")) {
-      const body = loadUser();
-    }
-  }, []);
 
   return (
     <div className="login-form">
@@ -89,9 +62,6 @@ const Login = props => {
             defaultValue={props.loginForm.password}
             onChange={e => props.passwordChange(e.target.value)}
           />
-        </Form.Group>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
         </Form.Group>
         <Button variant="primary" onClick={login}>
           Submit

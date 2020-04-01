@@ -1,31 +1,23 @@
 import React from "react";
 
-const taskFilter = props => {
+const TaskListFilter = props => {
   return (
     <div className="btn-group">
-      <button
-        key="all"
-        type="button"
-        onClick={() => props.filterAll(props.taskList)}
-      >
+      <button key="all" type="button" onClick={() => props.filterAll()}>
         all
       </button>
       <button
         key="button"
         type="button"
-        onClick={() => props.filterCompleted(props.taskList)}
+        onClick={() => props.filterCompleted()}
       >
         completed
       </button>
-      <button
-        key="active"
-        type="button"
-        onClick={() => props.filterWorking(props.taskList)}
-      >
+      <button key="active" type="button" onClick={() => props.filterWorking()}>
         active
       </button>
     </div>
   );
 };
 
-export default taskFilter;
+export default TaskListFilter;

@@ -2,10 +2,9 @@ import React from "react";
 import PrivateRoute from "./components/helper-components/privateRoute.js";
 import TodoService from "./services/todoService.js";
 import Header from "./components/Header/Header.js";
+import Footer from "./components/Footer/Footer.js";
 import Login from "./components/Login/Login.js";
-
-import HomePage from "./components/Pages/HomePage.js";
-import EditTaskPage from "./components/Pages/EditTaskPage.js";
+import AuthLoading from "./components/AuthLoading.js";
 import TaskList from "./components/TaskList/TaskList.js";
 import TaskForm from "./components/TaskForm/TaskForm.js";
 import EditTask from "./components/EditTask/EditTask.js";
@@ -16,12 +15,7 @@ import store from "./redux/index.js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useHistory
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const todoService = new TodoService();
 
@@ -34,13 +28,12 @@ export default function AuthExample() {
           <div className="main">
             <Switch>
               <PrivateRoute path="/tasks" component={Tasks} />
-
-              <Route path="/public/" component={PublicPage} />
+              <Route path="/authLoading" component={AuthLoading} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
-              <PrivateRoute path="/protected" component={ProtectedPage} />
             </Switch>
           </div>
+          <Footer />
         </Router>
       </StoreProvider>
     </TodoServiceProvider>
@@ -58,17 +51,3 @@ const Tasks = () => {
     </>
   );
 };
-
-class PublicPage extends React.Component {
-  render() {
-    console.log(this.props);
-    return <h3>Public</h3>;
-  }
-}
-
-class ProtectedPage extends React.Component {
-  render() {
-    console.log(this.props);
-    return <h3>Protected</h3>;
-  }
-}

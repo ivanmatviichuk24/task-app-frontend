@@ -1,10 +1,9 @@
 import React from "react";
-import { Navbar, Nav, Form, Button, FormControl } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import withTodoService from "../helper-components/withTodoService.js";
 import { connect } from "react-redux";
 import { userLogout } from "../../redux/actions/user.js";
-import "./index.css";
 
 const Header = props => {
   const user = props.user.isAuthenticated ? (
@@ -15,7 +14,7 @@ const Header = props => {
         onClick={() => {
           props.logout();
           localStorage.setItem("userToken", "");
-          props.todoService.socket.disconnect();
+          props.todoService.disconnectSocket();
         }}
       ></i>
     </div>
@@ -30,18 +29,11 @@ const Header = props => {
     </Nav>
   );
   return (
-    <Navbar bg="dark" variant="dark" className="header">
+    <Navbar bg="dark" variant="dark">
       <Navbar.Brand as={Link} to="/tasks">
         TaskApp
       </Navbar.Brand>
-      <Nav className="mr-auto">
-        <Nav.Link as={Link} to={"/public"}>
-          Public
-        </Nav.Link>
-        <Nav.Link as={Link} to={"/protected"}>
-          Protected
-        </Nav.Link>
-      </Nav>
+      <Nav className="mr-auto"></Nav>
       {user}
     </Navbar>
   );

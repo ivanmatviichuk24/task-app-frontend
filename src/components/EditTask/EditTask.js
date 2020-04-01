@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Col, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import withTodoService from "../helper-components/withTodoService.js";
 import {
@@ -68,17 +68,15 @@ class EditTask extends React.Component {
                 props.clearForm();
               }}
             >
-              <i className="fas fa-plus icon" />
               Edit
             </Button>
             <Button
               className="add-task-form-elem"
-              variant="primary"
+              variant="danger"
               onClick={() => {
                 this.props.clearForm();
               }}
             >
-              <i className="fas fa-plus icon" />
               Cancel
             </Button>
           </Link>

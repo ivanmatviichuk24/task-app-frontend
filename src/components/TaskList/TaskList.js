@@ -1,11 +1,10 @@
 import React from "react";
-import { Table, Tabs, Tab, OverlayTrigger, Overlay } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import withTodoService from "../helper-components/withTodoService";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   fetchTaskList,
-  fetchTaskListError,
   taskListShowAll,
   taskListShowCompleted,
   taskListShowWorking,
@@ -13,14 +12,10 @@ import {
 } from "../../redux/actions/taskList.js";
 import "./index.css";
 
-import TaskFilter from "../helper-components/taskFilter.js";
+import TaskFilter from "../helper-components/TaskFilter.js";
 import Modal from "../helper-components/Popover.js";
 class Tasks extends React.Component {
-  constructor() {
-    super();
-  }
   async componentDidMount() {
-    console.log(this.props.todoService.socket);
     this.props.todoService.socket.on("tasks", list => {
       this.props.fetchTaskList(list);
     });
@@ -28,7 +23,6 @@ class Tasks extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.taskList.list !== prevProps.taskList.list) {
-      console.log(this.props.taskList);
       this.props.filter(this.props.taskList);
     }
   }
@@ -36,29 +30,14 @@ class Tasks extends React.Component {
   render() {
     return (
       <>
-        <div className="btn-group">
-          <button
-            key="all"
-            type="button"
-            onClick={() => this.props.filterAll()}
-          >
-            all
-          </button>
-          <button
-            key="button"
-            type="button"
-            onClick={() => this.props.filterCompleted()}
-          >
-            completed
-          </button>
-          <button
-            key="active"
-            type="button"
-            onClick={() => this.props.filterWorking()}
-          >
-            active
-          </button>
+        <div className="task-filter">
+          <TaskFilter
+            filterAll={this.props.filterAll}
+            filterWorking={this.props.filterWorking}
+            filterCompleted={this.props.filterCompleted}
+          />
         </div>
+
         <Table striped bordered hover variant="dark" responsive>
           <thead>
             <tr>
@@ -117,16 +96,6 @@ const mapStateToProps = ({ taskList, user }) => {
   return {
     taskList,
     user
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchTaskList: list => dispatch(fetchTaskList(list)),
-    filter: taskList => dispatch(taskListFilter(taskList)),
-    filterAll: taskList => taskListShowAll(dispatch, taskList),
-    filterCompleted: taskList => taskListShowCompleted(dispatch, taskList),
-    filterWorking: taskList => taskListShowWorking(dispatch, taskList)
   };
 };
 

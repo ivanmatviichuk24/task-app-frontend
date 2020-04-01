@@ -1,18 +1,24 @@
 import React from "react";
 import "./index.css";
-import { Form, Col, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import { connect } from "react-redux";
 import withTodoService from "../helper-components/withTodoService.js";
 import {
   taskFormTitleChange,
   taskFormDescriptionChange,
-  taskFormSubmit
+  taskFormSubmit,
+  taskFormError
 } from "../../redux/actions/taskForm";
 
-import { fetchTaskList } from "../../redux/actions/taskList";
 const TaskForm = props => {
+  const error = props.taskForm.error ? (
+    <Alert variant="danger">Error</Alert>
+  ) : (
+    " "
+  );
   return (
     <div className="add-task-form-container">
+      {error}
       <Form className="add-task-form">
         <Form.Group className="add-task-form-elem">
           <Form.Label>Title</Form.Label>
@@ -37,11 +43,15 @@ const TaskForm = props => {
           className="add-task-form-elem"
           variant="primary"
           onClick={async () => {
-            await props.todoService.addTask({
-              title: props.taskForm.title,
-              description: props.taskForm.description
-            });
-            props.submit();
+            try {
+              await props.todoService.addTask({
+                title: props.taskForm.title,
+                description: props.taskForm.description
+              });
+              props.submit();
+            } catch (e) {
+              props.error();
+            }
           }}
         >
           <i className="fas fa-plus icon" />
@@ -60,6 +70,7 @@ const mapStateToProps = ({ taskForm }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    error: () => dispatch(taskFormError()),
     titleChange: value => dispatch(taskFormTitleChange(value)),
     descriptionChange: value => dispatch(taskFormDescriptionChange(value)),
     submit: () => taskFormSubmit(dispatch)

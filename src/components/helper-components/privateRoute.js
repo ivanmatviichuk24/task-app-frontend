@@ -3,15 +3,6 @@ import withTodoService from "./withTodoService.js";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-/*const PrivateRoute = ({ component: Component, ...rest }) => {
-  const isAuthenticated = stores.auth.isAuthenticated;
-  if (isAuthenticated) {
-    return <Route {...rest} render={props => } />;
-  }
-
-  return <Route {...rest} render={props => <Redirect to="/Login" />} />;
-};*/
-
 function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
@@ -22,7 +13,7 @@ function PrivateRoute({ component: Component, ...rest }) {
         ) : (
           <Redirect
             to={{
-              pathname: "/login",
+              pathname: "/authloading",
               state: { from: props.location }
             }}
           />
